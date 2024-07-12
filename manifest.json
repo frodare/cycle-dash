@@ -2,7 +2,7 @@
 	"name": "cycle-dahs",
 	"short_name": "Cycle Dash",
 	"start_url": "/cycle-dahs/?home=true",
-	"scope": "/cycle-dahs/",
+	"scope": "/cycle-dash/",
 	"icons": [
 		{
 			"src": "icons/manifest-icon-192.maskable.png",
