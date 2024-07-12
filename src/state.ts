@@ -1,4 +1,5 @@
 type LngLat = [number, number]
+type Point = [number, number]
 
 interface TrackPoint {
   time: number
@@ -34,5 +35,5 @@ const state: State = {
   ...readCanvas()
 }
 
-export type { State }
+export type { State, LngLat, TrackPoint, Point }
 export default state
