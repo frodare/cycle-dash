@@ -1,7 +1,7 @@
 {
-	"name": "cycle-dahs",
+	"name": "cycle-dash",
 	"short_name": "Cycle Dash",
-	"start_url": "/cycle-dahs/?home=true",
+	"start_url": "/cycle-dash/?home=true",
 	"scope": "/cycle-dash/",
 	"icons": [
 		{
