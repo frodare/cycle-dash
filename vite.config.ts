@@ -2,5 +2,8 @@ import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/cycle-dash/"
+  base: "/cycle-dash/",
+  build: {
+    target: 'esnext',
+  }
 })
