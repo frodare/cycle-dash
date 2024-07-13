@@ -1,3 +1,4 @@
+import renderLocation from './renderLocation'
 import state from './state'
 
 const text = (s: string, x: number, y: number, w: number, h: number): void => {
@@ -13,14 +14,14 @@ const text = (s: string, x: number, y: number, w: number, h: number): void => {
 }
 
 const time = (): void => {
-  const size = state.height / 6
+  const size = state.height / 8
   const date = new Date()
-  text(`${date.getHours()}:${date.getMinutes()}`, 0, size, state.width, size)
+  text(`${date.getHours()}:${date.getMinutes()}`, 0, size / 2, state.width, size)
 }
 
 const location = (): void => {
-  const timeLocation = state.height / 3
-  const size = state.height / 24
+  const timeLocation = state.height / 6
+  const size = state.height / 32
   const { location } = state
   if (location == null) return
   const [lng, lat] = location.location
@@ -39,6 +40,7 @@ const render = (): void => {
   clear()
   time()
   location()
+  renderLocation()
   // Time
   // Timer
 

@@ -9,9 +9,13 @@ interface TrackPoint {
 interface State {
   height: number
   width: number
+  plotCenter: LngLat
+  plotWidthMeter: number
   canvas: HTMLCanvasElement
   ctx: CanvasRenderingContext2D
   location: TrackPoint | null
+  tracks: TrackPoint[]
+  paths: LngLat[][]
 }
 
 interface CanvasCtx {
@@ -31,7 +35,11 @@ const readCanvas = (): CanvasCtx => {
 const state: State = {
   height: 0,
   width: 0,
+  plotCenter: [-8201821.945939356, 8932577.051546052],
+  plotWidthMeter: 50_000,
   location: null,
+  tracks: [],
+  paths: [],
   ...readCanvas()
 }
 

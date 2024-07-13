@@ -10874,50 +10874,6 @@
         "visibility": "true"
       },
       "id": "ANDROID-c01d53afd218ccfb.track.2track_2024-03-03T16-57-21Z Path"
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.269163,
-          30.372665,
-          -0.5043799904495785
-        ]
-      },
-      "properties": {
-        "name": "track_2024-03-03T16-57-21Z SP",
-        "styleUrl": "#841667597",
-        "styleHash": "-7bd9df50",
-        "icon": "http://maps.google.com/mapfiles/kml/pushpin/wht-pushpin.png",
-        "stroke": "#FFFFFF",
-        "stroke-opacity": 1,
-        "stroke-width": 4,
-        "visibility": "true"
-      },
-      "id": "21efc1c4-7073-4008-9202-dfb7596867ca"
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.335293,
-          30.345555,
-          -4.2966557482194006
-        ]
-      },
-      "properties": {
-        "name": "VDO",
-        "styleUrl": "#841667597",
-        "styleHash": "-7bd9df50",
-        "icon": "http://maps.google.com/mapfiles/kml/pushpin/wht-pushpin.png",
-        "stroke": "#FFFFFF",
-        "stroke-opacity": 1,
-        "stroke-width": 4,
-        "visibility": "true"
-      },
-      "id": "577247ed-e9fc-4130-b671-4d0140c2cb25"
     }
   ]
 }

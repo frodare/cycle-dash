@@ -2,6 +2,9 @@ import render from './render'
 import state from './state'
 import './style.css'
 import './location'
+import './wakeLock'
+import './interaction'
+import loadPaths from './loadPaths'
 
 const clear = (): void => state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height)
 
@@ -29,6 +32,7 @@ const resizeCanvas = async (): Promise<void> => {
   state.width = window.innerWidth
   setupCanvas()
   await setupFont()
+  loadPaths()
   render()
 }
 
@@ -45,11 +49,17 @@ const setupFont = async (): Promise<void> => {
 
 /*
 TODO:
-- linter
-- event loop
-- state manager?
-- theme (light / dark)
 - wake lock
+- implement pan/zoom
+- direction speed
+- scale legend
+- rough.js
+- drop point
+- interval render
+- move track to state
+- add current track
+- save to index db?
+
 - import / export KML
 - save to google spreadsheet
 - spotify integration
@@ -59,6 +69,8 @@ TODO:
 Milestones:
 1. get time, speed, direction, distance work and test to see if the white on black screen is visible in the sun
 */
+
+loadPaths()
 
 window.addEventListener('resize', () => {
   void resizeCanvas()
