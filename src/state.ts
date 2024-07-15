@@ -1,3 +1,6 @@
+import appModel, { AppState } from './state/appModel'
+import pathModel, { PathModel } from './state/pathModel'
+
 type LngLat = [number, number]
 type Point = [number, number]
 
@@ -6,42 +9,16 @@ interface TrackPoint {
   location: LngLat
 }
 
-interface State {
-  height: number
-  width: number
-  plotCenter: LngLat
-  plotWidthMeter: number
-  canvas: HTMLCanvasElement
-  ctx: CanvasRenderingContext2D
-  location: TrackPoint | null
-  tracks: TrackPoint[]
-  paths: LngLat[][]
+class RootStore {
+  path: PathModel
+  app: AppState
+  constructor () {
+    this.path = pathModel(this)
+    this.app = appModel()
+  }
 }
 
-interface CanvasCtx {
-  canvas: HTMLCanvasElement
-  ctx: CanvasRenderingContext2D
-}
+const store = new RootStore()
 
-const readCanvas = (): CanvasCtx => {
-  const canvas = document.getElementById('app')
-  if (canvas == null) throw new Error('Canvas not found')
-  if (!(canvas instanceof HTMLCanvasElement)) throw new Error('Canvas not found')
-  const ctx = canvas.getContext('2d')
-  if (ctx == null) throw new Error('Canvas not found')
-  return { canvas, ctx }
-}
-
-const state: State = {
-  height: 0,
-  width: 0,
-  plotCenter: [-8201821.945939356, 8932577.051546052],
-  plotWidthMeter: 50_000,
-  location: null,
-  tracks: [],
-  paths: [],
-  ...readCanvas()
-}
-
-export type { State, LngLat, TrackPoint, Point }
-export default state
+export type { LngLat, Point, RootStore, TrackPoint }
+export default store

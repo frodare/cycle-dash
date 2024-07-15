@@ -1,77 +1,198 @@
-import plot from './plot'
+import { Drawable, Options } from 'roughjs/bin/core'
+import { project, unproject } from './projection'
 import state, { Point } from './state'
+import { bearing, distance } from '@turf/turf'
+import { applyToPoint, scale } from 'transformation-matrix'
+import { get, trace } from 'mobx'
 
-const drawX = ([x, y]: Point, color: string): void => {
-  const ctx = state.ctx
-  const size = 10
-  ctx.strokeStyle = color
-  ctx.translate(x, y)
-  ctx.beginPath()
-  ctx.moveTo(0, 0)
-  ctx.lineTo(size, size)
-  ctx.moveTo(size, 0)
-  ctx.lineTo(0, size)
-  ctx.stroke()
-  ctx.fillRect(x - size / 2, y - size / 2, size, size)
-  ctx.translate(-x, -y)
+const createXShape = (color: string): Drawable[] => {
+  const rc = state.app.rc
+  const size = 15
+  const s2 = size / 2
+
+  const options: Options = {
+    stroke: color,
+    strokeWidth: 3,
+    roughness: 1.5
+  }
+  return [
+    rc.generator.line(-s2, -s2, s2, s2, options),
+    rc.generator.line(s2, -s2, -s2, s2, options)
+  ]
+}
+
+type Fn = () => void
+
+const compass = (): Fn => {
+  const rc = state.app.rc
+  const ctx = state.app.ctx
+
+  const options: Options = {
+    stroke: '#444',
+    strokeWidth: 1,
+    roughness: 1,
+    curveFitting: 1
+  }
+
+  let renderedWidth = 0
+
+  let x = 0
+  let y = 0
+  let diameter = 0
+  let ring: Drawable
+  let ticks: Drawable[] = []
+  let subTicks: Drawable[] = []
+
+  return () => {
+    if (state.app.width < 100) return
+
+    if (renderedWidth !== state.app.width) {
+      x = state.app.width / 2
+      y = state.app.height / 2
+      renderedWidth = state.app.width
+      diameter = state.app.width - state.app.width / 20
+      ring = rc.generator.circle(0, 0, diameter, options)
+      ticks = new Array(8).fill(null).map(() => rc.generator.line(0, 0, 0, diameter / 12, options))
+      subTicks = new Array(8).fill(null).map(() => rc.generator.line(0, 0, 0, diameter / 28, options))
+    }
+
+    ctx.save()
+    ctx.translate(x, y)
+
+    rc.draw(ring)
+
+    const textSize = diameter / 20
+
+    ticks.forEach((d, i) => {
+      const angle = (Math.PI / 4) * i
+      ctx.save()
+      ctx.rotate(angle)
+      ctx.translate(0, -diameter / 2)
+      rc.draw(d)
+      if (i === 0) {
+        text('N', 0, textSize / 4, textSize, '#777')
+      }
+      ctx.restore()
+    })
+    subTicks.forEach((d, i) => {
+      const angle = ((Math.PI / 4) * i) + Math.PI / 8
+      ctx.save()
+      ctx.rotate(angle)
+      ctx.translate(0, -diameter / 2)
+      rc.draw(d)
+      ctx.restore()
+    })
+    ctx.restore()
+  }
+}
+
+const locationMarker = createXShape('red')
+const centerMarker = createXShape('white')
+// const wp1Marker = createXShape('green')
+
+const renderDrawable = (drawable: Drawable[], [x, y]: Point): void => {
+  state.app.ctx.translate(x, y)
+  drawable.forEach((d) => state.app.rc.draw(d))
+  state.app.ctx.translate(-x, -y)
+}
+
+const directionOrdinal = (bearing: number): string => {
+  if (bearing < 22.5) return 'N'
+  if (bearing < 67.5) return 'NE'
+  if (bearing < 112.5) return 'E'
+  if (bearing < 157.5) return 'SE'
+  if (bearing < 202.5) return 'S'
+  if (bearing < 247.5) return 'SW'
+  if (bearing < 292.5) return 'W'
+  if (bearing < 337.5) return 'NW'
+  return 'N'
+}
+
+const compassMarker = compass()
+
+const text = (s: string, x: number, y: number, size: number, color: string): void => {
+  const { ctx } = state.app
+  ctx.fillStyle = color
+  ctx.font = `${size}px Oswald`
+  ctx.textBaseline = 'top'
+  ctx.textAlign = 'center'
+  ctx.fillText(s, x, y)
 }
 
 const renderLocation = (): void => {
-  // const lineString = geojson.features[0] as Feature<LineString>
+  const ctx = state.app.ctx
+  // const { plot } = state.app.plotter
 
-  // const trailHead = [-84.316803, 30.361415] as LngLat
+  compassMarker()
 
-  // const center = state.plotCenter
-  // const centerCord = unproject(center)
+  ctx.save()
 
-  // console.log('center', center)
+  const center = state.app.plotCenter
+  // const widthM = state.app.plotWidthMeter
+  // const widthPx = state.app.width
+  // const plotScale = widthPx / widthM
+  const plotScale = state.app.scale
+  const plot = (point: Point): Point => applyToPoint(scale(plotScale), point)
 
-  // const widthM = state.plotWidthMeter
+  ctx.translate(state.app.width / 2, state.app.height / 2)
+  ctx.translate(-center[0] * plotScale, -center[1] * plotScale)
 
-  // const widthPx = state.width
-  // const heightPx = state.height
+  // console.log(state.path.drawable)
 
-  // const heightM = widthM * (heightPx / widthPx)
-
-  // const bottom = center[1] - heightM / 2
-  // const left = center[0] - widthM / 2
-
-  // const scale = widthM / widthPx
-
-  // const points2 = [centerCord, trailHead]
-  // if (state.location != null) {
-  //   points2.push(state.location.location)
+  // if (state.path.source != null) {
+  //   console.log('draw source')
+  //   trace(state.path.source)
   // }
-  // const points2Projected = points2.map((coord): Point => {
-  //   return project(coord)
-  // })
 
-  // const matrix = plotMatrix()
-
-  // const points = [...points2Projected, ...points1].map((point): Point => {
-  //   return applyToPoint(matrix, [
-  //     ((point[0] - left) / scale),
-  //     1 * (point[1] - bottom) / scale
-  //   ])
-  // })
-
-  const ctx = state.ctx
-
-  const plotter = plot()
-
-  drawX(plotter([-84.316803, 30.361415]), 'white')
-  if (state.location != null) {
-    drawX(plotter(state.location.location), 'red')
+  const projected = get(state.path, 'projected')
+  if (projected != null) {
+    console.log('draw projected')
+    trace(state.path, "projected")
   }
 
-  if (state.paths.length < 1) return
+  // if (state.path.drawable != null) {
+  //   console.log('draw path')
+  //   trace(state.path.drawable)
+  //   state.app.rc.draw(state.path.drawable)
+  // }
 
-  state.paths[0].forEach(([x, y]) => {
-    ctx.fillStyle = '#999'
-    ctx.beginPath()
-    ctx.arc(x, y, 1, 0, 2 * Math.PI)
-    ctx.fill()
-  })
+  // console.log(state.app.plotCenter)
+
+  if (state.app.location != null) {
+    const centerCoord = unproject(state.app.plotCenter)
+    const locationCoord = state.app.location.location
+
+    const dist = distance(centerCoord, locationCoord, { units: 'kilometers' })
+    let b = bearing(locationCoord, centerCoord)
+    if (b < 0) b += 360
+    text(`${dist.toFixed(2)}km  ${Math.round(b)}°(${directionOrdinal(b)})`, 0, -state.app.width / 2 + state.app.width / 10, 20, 'white')
+  }
+
+  if (state.app.location != null) {
+    const [x1, y1] = plot(project(state.app.location.location))
+    const [x2, y2] = plot(state.app.plotCenter)
+
+    state.app.rc.line(x1, y1, x2, y2, {
+      stroke: '#f008',
+      strokeWidth: 2,
+      roughness: 1,
+      dashGap: 0.5,
+      dashOffset: 0.5,
+      strokeLineDash: [10, 20]
+    })
+  }
+
+  if (state.app.trackPath != null) {
+    state.app.rc.draw(state.app.trackPath)
+  }
+
+  if (state.app.location != null) {
+    renderDrawable(locationMarker, plot(project(state.app.location.location)))
+  }
+
+  // renderDrawable(wp1Marker, plot(project([-84.316803, 30.361415])))
+  renderDrawable(centerMarker, plot(state.app.plotCenter))
+  ctx.restore()
 }
 
 export default renderLocation

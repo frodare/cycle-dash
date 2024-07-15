@@ -13,12 +13,14 @@
     "lint": "ts-standard",
     "tools:kmzToGeojson": "node tools/kmzToGeojson",
     "test": "jest",
+    "type-check": "tsc --noEmit",
     "test:dev": "jest --watch"
   },
   "devDependencies": {
     "@mapbox/togeojson": "^0.16.2",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.6",
+    "@types/mapbox__sphericalmercator": "^1.2.3",
     "gh-pages": "^6.1.1",
     "jest": "^29.7.0",
     "jsdom": "^24.1.0",
@@ -29,11 +31,14 @@
     "vite": "^5.3.1"
   },
   "dependencies": {
+    "@mapbox/sphericalmercator": "^1.2.0",
     "@turf/turf": "^7.0.0",
     "@types/proj4": "^2.5.5",
     "geojson": "^0.5.0",
     "lodash": "^4.17.21",
+    "mobx": "^6.13.0",
     "proj4": "^2.11.0",
+    "roughjs": "^4.6.6",
     "transformation-matrix": "^2.16.1"
   }
 }
