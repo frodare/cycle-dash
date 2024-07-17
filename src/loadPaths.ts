@@ -1,11 +1,17 @@
 import { Feature, LineString } from 'geojson'
 import geojson from './data/track1.json'
-// import { project } from './projection'
-import state, { LngLat } from './state'
+import { LngLat } from './main'
+import { store } from './store'
+import { setTrail } from './features/track'
 
 const loadPaths = (): void => {
   const lineString = geojson.features[0] as Feature<LineString>
-  state.path.update(lineString.geometry.coordinates as LngLat[])
+  store.dispatch(setTrail({
+    name: 'Goldmine',
+    points: lineString.geometry.coordinates as LngLat[]
+  }))
 }
+
+loadPaths()
 
 export default loadPaths

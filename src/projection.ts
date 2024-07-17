@@ -1,5 +1,5 @@
-import { LngLat, Point } from './state'
 import SphericalMercator from '@mapbox/sphericalmercator'
+import { LngLat, Point } from './main'
 
 const mercator = new SphericalMercator({
   size: 256,

@@ -1,17 +1,17 @@
 import { destination } from '@turf/turf'
-import render from './render'
-import state, { LngLat } from './state'
+import { addTrackPoint } from './features/track'
+import { LngLat } from './main'
+import { store } from './store'
 
 const MODE = 'demo'
 
 const setupGpsLocator = (): void => {
   if (!('geolocation' in navigator)) return
   navigator.geolocation.watchPosition((position) => {
-    state.app.location = {
+    addTrackPoint({
       time: position.timestamp,
       location: [position.coords.longitude, position.coords.latitude]
-    }
-    render()
+    })
   }, (error) => {
     console.error(error)
   }, {
@@ -26,31 +26,26 @@ const randNum = (min: number, max: number): number => {
 }
 
 let currentLocation: LngLat = [-84.336604, 30.355065]
-let speed = 10
+let speed = 50
 let bearing = 45
+
 const demoLocator = (): void => {
-  setInterval(() => {
+  setTimeout(() => {
     const shouldTurn = Math.random() > 0.5
     const shouldTurnSharply = Math.random() > 0.9
     const turnRange = shouldTurnSharply ? 120 : 20
     const shouldChangeSpeed = Math.random() > 0.6
     const turnAmount = randNum(-turnRange, turnRange)
-    speed = shouldChangeSpeed ? Math.min(20, randNum(-5, 5) + speed) : speed
+    speed = shouldChangeSpeed ? Math.min(200, randNum(-5, 5) + speed) : speed
     bearing = shouldTurn ? bearing + turnAmount : bearing
     currentLocation = destination(currentLocation, speed / 3600, bearing).geometry.coordinates as LngLat
-    state.app.location = {
+    store.dispatch(addTrackPoint({
       time: Date.now(),
       location: currentLocation
-    }
-    state.app.addTrackPoint({
-      time: Date.now(),
-      location: currentLocation
-    })
-    render()
-  }, 1000)
+    }))
+    demoLocator()
+  }, randNum(1000, 1000))
 }
-
-console.log('Hello, World!')
 
 if (MODE === 'demo') {
   demoLocator()

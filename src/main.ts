@@ -1,52 +1,3 @@
-import render from './render'
-import state from './state'
-import './style.css'
-import './location'
-import './wakeLock'
-import './interaction'
-import loadPaths from './loadPaths'
-
-const clear = (): void => state.app.ctx.clearRect(0, 0, state.app.canvas.width, state.app.canvas.height)
-
-const setupCanvas = (): void => {
-  const scale = window.devicePixelRatio
-  const heightPx = state.app.height
-  const widthPx = state.app.width
-
-  const scaledWidth = widthPx * scale
-  const scaledHeight = heightPx * scale
-
-  if (state.app.canvas.width !== scaledWidth || state.app.canvas.height !== scaledHeight) {
-    state.app.canvas.width = widthPx * scale
-    state.app.canvas.height = heightPx * scale
-    state.app.canvas.style.width = `${state.app.width}px`
-    state.app.canvas.style.height = `${state.app.height}px`
-    state.app.ctx.scale(scale, scale)
-  }
-
-  clear()
-}
-
-const resizeCanvas = async (): Promise<void> => {
-  state.app.height = window.innerHeight
-  state.app.width = window.innerWidth
-  setupCanvas()
-  await setupFont()
-  loadPaths()
-  render()
-}
-
-const setupFont = async (): Promise<void> => {
-  const font = new FontFace(
-    'Oswald',
-    'url(https://fonts.gstatic.com/s/oswald/v53/TK3_WkUHHAIjg75cFRf3bXL8LICs1_FvsUZiZSSUhiCXAA.woff2)'
-  )
-
-  const face = await font.load()
-  document.fonts.add(face)
-  render()
-}
-
 /*
 TODO:
 - fix wake lock
@@ -83,11 +34,32 @@ Milestones:
   - could have benefitted from having a bearing to middle of screen system
 2. fix issues from the first test and try out (speed direction and distance)
 */
+import './style.css'
+import './location'
+// import './wakeLock'
+import './interaction'
+import './loadPaths'
 
-loadPaths()
+import { setup } from './canvas'
+import { store } from './store'
+import debounce from 'lodash/debounce'
+import render from './ui/render'
 
-window.addEventListener('resize', () => {
-  void resizeCanvas()
+interface TrackPoint {
+  time: number
+  location: LngLat
+}
+
+type Point = [number, number]
+
+type LngLat = [number, number]
+
+const debouncedRender = debounce(render, 25, { maxWait: 250 })
+
+store.subscribe(() => {
+  debouncedRender()
 })
 
-await resizeCanvas()
+void setup()
+
+export type { TrackPoint, Point, LngLat }

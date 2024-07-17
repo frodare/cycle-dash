@@ -1,8 +1,9 @@
 import debounce from 'lodash/debounce'
-import render from './render'
-import state, { Point } from './state'
+import { Point } from './main'
+import { store } from './store'
+import { setCenter, setScale } from './features/screen'
 
-const canvas = document.body // state.app.canvas
+const canvas = document.body // canvas
 
 let panning: Point | null = null
 const evCache: PointerEvent[] = []
@@ -17,9 +18,9 @@ const removeEvent = (ev: PointerEvent): void => {
 
 const handleWheel = (event: WheelEvent): void => {
   if (event.deltaY < 0) {
-    debouncedZoom(0.9)
-  } else {
     debouncedZoom(1.1)
+  } else {
+    debouncedZoom(0.9)
   }
 }
 
@@ -56,10 +57,10 @@ const pointermoveHandler = (ev: PointerEvent): void => {
 
     if (prevDiff > 0) {
       if (curDiff > prevDiff) {
-        debouncedZoom(0.9)
+        debouncedZoom(1.1)
       }
       if (curDiff < prevDiff) {
-        debouncedZoom(1.1)
+        debouncedZoom(0.9)
       }
     }
 
@@ -72,16 +73,15 @@ const times = (n: number) => (x: number): number => x * n
 const pan = (x: number, y: number): void => {
   if (evCache.length > 1) return
   if (panning == null) return
-  const scale = state.app.plotWidthMeter / state.app.width
-  const diff = [x - panning[0], y - panning[1]].map(times(scale))
-  state.app.plotCenter = [state.app.plotCenter[0] - diff[0], state.app.plotCenter[1] - diff[1]]
+  const { scale, center } = store.getState().screen
+  const diff = [x - panning[0], y - panning[1]].map(times(1 / scale))
+  store.dispatch(setCenter([center[0] - diff[0], center[1] - diff[1]]))
   panning = [x, y]
-  render()
 }
 
 const zoom = (factor: number): void => {
-  state.app.plotWidthMeter *= factor
-  render()
+  const { scale } = store.getState().screen
+  store.dispatch(setScale(scale * factor))
 }
 
 const debouncedPan = debounce(pan, 50, { leading: false, trailing: true, maxWait: 50 })
