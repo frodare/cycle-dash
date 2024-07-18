@@ -3,15 +3,15 @@ import { addTrackPoint } from './features/track'
 import { LngLat } from './main'
 import { store } from './store'
 
-const MODE = 'demo'
-
 const setupGpsLocator = (): void => {
   if (!('geolocation' in navigator)) return
+  console.log('geolocation is available')
   navigator.geolocation.watchPosition((position) => {
-    addTrackPoint({
+    console.log(position)
+    store.dispatch(addTrackPoint({
       time: position.timestamp,
       location: [position.coords.longitude, position.coords.latitude]
-    })
+    }))
   }, (error) => {
     console.error(error)
   }, {
@@ -47,8 +47,12 @@ const demoLocator = (): void => {
   }, randNum(1000, 1000))
 }
 
-if (MODE === 'demo') {
-  demoLocator()
-} else {
-  setupGpsLocator()
+const setupLocationTracking = (mode: 'gps' | 'demo'): void => {
+  if (mode === 'demo') {
+    demoLocator()
+  } else {
+    setupGpsLocator()
+  }
 }
+
+export default setupLocationTracking

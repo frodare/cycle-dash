@@ -1,10 +1,8 @@
 /*
 TODO:
 - fix wake lock
-- direction speed distance
-- scale legend
 - interval render
-
+- spatial debounce for addTrackPoint
 - add current track
   - save to index db?
   - how is this cleared?
@@ -35,15 +33,15 @@ Milestones:
 2. fix issues from the first test and try out (speed direction and distance)
 */
 import './style.css'
-import './location'
-// import './wakeLock'
 import './interaction'
 import './loadPaths'
+// import './wakeLock'
 
+import setupLocationTracking from './setupLocationTracking'
 import { setup } from './canvas'
 import { store } from './store'
 import debounce from 'lodash/debounce'
-import render from './ui/render'
+import render from './ui'
 
 interface TrackPoint {
   time: number
@@ -61,5 +59,6 @@ store.subscribe(() => {
 })
 
 void setup()
+setupLocationTracking('gps')
 
 export type { TrackPoint, Point, LngLat }
