@@ -42,6 +42,7 @@ const render: ComponentRenderer = (component, x, y, w, h) => {
 }
 
 const ui = (): void => {
+  // console.time('ui')
   clear()
   render(time, '0', '1vh', '100vw', '10vh')
   render(telemetry, '2vw', '1vh', '96vw', '6vh')
@@ -63,6 +64,7 @@ const ui = (): void => {
   // Spotify
 
   // FPS monitor
+  // console.timeEnd('ui')
 }
 
 export type { Component }

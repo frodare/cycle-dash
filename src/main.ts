@@ -1,7 +1,5 @@
 /*
 TODO:
-- fix wake lock
-- interval render
 - spatial debounce for addTrackPoint
 - add current track
   - save to index db?
@@ -60,5 +58,9 @@ store.subscribe(() => {
 
 void setup()
 setupLocationTracking('gps')
+
+setInterval(() => {
+  debouncedRender()
+}, 10000)
 
 export type { LngLat, Point, TrackPoint }
