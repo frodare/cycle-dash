@@ -10,7 +10,6 @@ let rc = rough.canvas(canvas)
 const handleSizeUpdate = (): void => {
   const width = window.innerWidth
   const height = window.innerHeight
-  console.log('handleSizeUpdate', width, height)
   const scaledWidth = width * scale
   const scaledHeight = height * scale
   if (canvas.width !== scaledWidth || canvas.height !== scaledHeight) {

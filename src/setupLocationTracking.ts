@@ -5,9 +5,7 @@ import { store } from './store'
 
 const setupGpsLocator = (): void => {
   if (!('geolocation' in navigator)) return
-  console.log('geolocation is available')
   navigator.geolocation.watchPosition((position) => {
-    console.log(position)
     store.dispatch(addTrackPoint({
       time: position.timestamp,
       location: [position.coords.longitude, position.coords.latitude]
