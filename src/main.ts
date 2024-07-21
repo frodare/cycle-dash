@@ -1,6 +1,6 @@
 /*
 TODO:
-- spatial debounce for addTrackPoint
+- rendering on every store update, even for noop
 - add current track
   - save to index db?
   - how is this cleared?
@@ -11,6 +11,9 @@ TODO:
 - drop point
 - move track to state
 - compass ring that allows rotating the map
+- improve pan and pinch zoom
+  - when using a mouse and dragging off screen, it gets stuck in pinch zoom mode
+- add imperial units
 
 - radar overlay https://www.rainviewer.com/api/
 - test projection with world outline
