@@ -14,6 +14,7 @@ TODO:
 - improve pan and pinch zoom
   - when using a mouse and dragging off screen, it gets stuck in pinch zoom mode
 - add imperial units
+- add scale (helpful when there are no other reference points)
 
 - radar overlay https://www.rainviewer.com/api/
 - test projection with world outline
@@ -43,6 +44,7 @@ import './wakeLock'
 import { store } from './store'
 import './style.css'
 import render from './ui'
+import './features/track/persist'
 
 interface TrackPoint {
   time: number
@@ -60,7 +62,7 @@ store.subscribe(() => {
 })
 
 void setup()
-setupLocationTracking('gps')
+setupLocationTracking('demo')
 
 setInterval(() => {
   debouncedRender()

@@ -8,12 +8,21 @@ interface TrackPoint {
   location: LngLat
 }
 
+interface TrailEntry {
+  id: string
+  date: number
+  type: 'trail' | 'savedTrack'
+  points: LngLat[]
+}
+
 interface TrackState {
+  trackId: string
   track: TrackPoint[]
-  trails: Record<string, LngLat[]>
+  trails: Record<string, TrailEntry>
 }
 
 const initialState: TrackState = {
+  trackId: new Date().toString(),
   track: [],
   trails: {}
 }
@@ -25,6 +34,9 @@ const trackSlice = createSlice({
   name: 'track',
   initialState,
   reducers: {
+    setTrail: (state, action: PayloadAction<TrailEntry>) => {
+      state.trails[action.payload.id] = action.payload
+    },
     addTrackPoint: (state, action: PayloadAction<TrackPoint>) => {
       if (state.track.length > 500000) {
         state.track = [action.payload]
@@ -39,13 +51,10 @@ const trackSlice = createSlice({
       if (distToLast < MIN_DISTANCE) return
       last = action.payload
       state.track.push(action.payload)
-    },
-    setTrail: (state, action: PayloadAction<{ name: string, points: LngLat[] }>) => {
-      state.trails[action.payload.name] = action.payload.points
     }
   }
 })
 
-export type { TrackPoint }
+export type { TrackPoint, TrailEntry }
 export const { setTrail, addTrackPoint } = trackSlice.actions
 export default trackSlice.reducer

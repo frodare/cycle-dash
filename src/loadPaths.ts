@@ -7,7 +7,9 @@ import { setTrail } from './features/track'
 const loadPaths = (): void => {
   const lineString = geojson.features[0] as Feature<LineString>
   store.dispatch(setTrail({
-    name: 'Goldmine',
+    id: 'Goldmine',
+    type: 'trail',
+    date: Date.now(),
     points: lineString.geometry.coordinates as LngLat[]
   }))
 }

@@ -9,7 +9,7 @@ const selectDrawableTrack = createSelector(
   (track): Drawable | null => {
     if (track.length < 2) return null
     const path = track.map((p) => p.location)
-    return createDrawablePath(path, { stroke: '#f005', strokeWidth: 4, roughness: 2 })
+    return createDrawablePath(path, { stroke: '#f009', strokeWidth: 4, roughness: 2 })
   }
 )
 
