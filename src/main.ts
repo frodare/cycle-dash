@@ -62,7 +62,7 @@ store.subscribe(() => {
 })
 
 void setup()
-setupLocationTracking('demo')
+setupLocationTracking('gps')
 
 setInterval(() => {
   debouncedRender()
