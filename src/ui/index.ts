@@ -45,7 +45,7 @@ const ui = (): void => {
   // console.time('ui')
   clear()
   render(time, '0', '1vh', '100vw', '10vh')
-  render(telemetry, '2vw', '1vh', '96vw', '6vh')
+  render(telemetry, '2vw', '11vh', '96vw', '8vh')
   render(location, '0', '-5vh', '100vw', '5vh')
   render(toCenterComponentTelemetry, '0', '-7vh', '100vw', '2vh')
   map()

@@ -7,13 +7,13 @@ const telemetry: Component = (x, y, w, h) => {
   const { speed } = getTelemetry()
   const distance = getDistance()
 
-  const u = h / 3
+  const u = h / 4
 
-  text(speed.toFixed(2), x, y, w, 2 * u, { baseline: 'top', align: 'left' })
-  text('km/h', x, y + 2 * u, w, u, { baseline: 'top', align: 'left' })
+  text(speed.toFixed(2), x, y, w, 3 * u, { baseline: 'top', align: 'left' })
+  text('km/h', x, y + 3 * u, w, u, { baseline: 'top', align: 'left' })
 
-  text(distance.toFixed(2), x, y, w, 2 * u, { baseline: 'top', align: 'right' })
-  text('km', x, y + 2 * u, w, u, { baseline: 'top', align: 'right' })
+  text(distance.toFixed(2), x, y, w, 3 * u, { baseline: 'top', align: 'right' })
+  text('km', x, y + 3 * u, w, u, { baseline: 'top', align: 'right' })
 }
 
 export default telemetry
