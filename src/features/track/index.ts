@@ -17,6 +17,7 @@ interface TrailEntry {
 
 interface TrackState {
   trackId: string
+  location: TrackPoint | null
   track: TrackPoint[]
   trails: Record<string, TrailEntry>
 }
@@ -24,6 +25,7 @@ interface TrackState {
 const initialState: TrackState = {
   trackId: new Date().toString(),
   track: [],
+  location: null,
   trails: {}
 }
 
@@ -37,8 +39,10 @@ const trackSlice = createSlice({
     setTrail: (state, action: PayloadAction<TrailEntry>) => {
       state.trails[action.payload.id] = action.payload
     },
-    addTrackPoint: (state, action: PayloadAction<TrackPoint>) => {
+    updateLocation: (state, action: PayloadAction<TrackPoint>) => {
+      state.location = action.payload
       if (state.track.length > 500000) {
+        // TODO: Save track
         state.track = [action.payload]
         return
       }
@@ -56,5 +60,5 @@ const trackSlice = createSlice({
 })
 
 export type { TrackPoint, TrailEntry }
-export const { setTrail, addTrackPoint } = trackSlice.actions
+export const { setTrail, updateLocation } = trackSlice.actions
 export default trackSlice.reducer

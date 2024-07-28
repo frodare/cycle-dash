@@ -1,12 +1,12 @@
 import { destination } from '@turf/turf'
-import { addTrackPoint } from './features/track'
+import { updateLocation } from './features/track'
 import { LngLat } from './main'
 import { store } from './store'
 
 const setupGpsLocator = (): void => {
   if (!('geolocation' in navigator)) return
   navigator.geolocation.watchPosition((position) => {
-    store.dispatch(addTrackPoint({
+    store.dispatch(updateLocation({
       time: position.timestamp,
       location: [position.coords.longitude, position.coords.latitude]
     }))
@@ -37,7 +37,7 @@ const demoLocator = (): void => {
     speed = shouldChangeSpeed ? Math.min(200, randNum(-5, 5) + speed) : speed
     bearing = shouldTurn ? bearing + turnAmount : bearing
     currentLocation = destination(currentLocation, speed / 3600, bearing).geometry.coordinates as LngLat
-    store.dispatch(addTrackPoint({
+    store.dispatch(updateLocation({
       time: Date.now(),
       location: currentLocation
     }))
