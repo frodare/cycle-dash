@@ -10,7 +10,9 @@ const createPointerDrawing = (color: string): Drawable[] => {
   const options: Options = {
     stroke: color,
     strokeWidth: 3,
-    roughness: 1.5
+    roughness: 1.5,
+    fill: color,
+    fillStyle: 'solid'
   }
 
   const p1: Point = [0, -2 * s3]
@@ -18,9 +20,10 @@ const createPointerDrawing = (color: string): Drawable[] => {
   const p3: Point = [s4, s3]
 
   return [
-    rc.generator.line(p1[0], p1[1], p2[0], p2[1], options),
-    rc.generator.line(p1[0], p1[1], p3[0], p3[1], options),
-    rc.generator.line(p2[0], p2[1], p3[0], p3[1], options)
+    rc.generator.polygon([p1, p2, p3], options)
+    // rc.generator.line(p1[0], p1[1], p2[0], p2[1], options),
+    // rc.generator.line(p1[0], p1[1], p3[0], p3[1], options),
+    // rc.generator.line(p2[0], p2[1], p3[0], p3[1], options)
   ]
 }
 

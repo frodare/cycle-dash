@@ -24,7 +24,7 @@ TODO:
 */
 
 /*
-Milestones:
+Test 1:
 1. get time, speed, direction, distance work and test to see if the white on black screen is visible in the sun
   Results:
   - speed, direction, and distance where not built yet
@@ -34,7 +34,20 @@ Milestones:
   - wake lock would fail if app ever lost focus
   - could have benefitted from having a bearing to middle of screen system
 2. fix issues from the first test and try out (speed direction and distance)
+
+Test 2:
+- Red is too faint
+- Lines are too thin
+- Round the speed to a whole number
+- replace addTrackPoint with setCurrentPosition
+- Speed should zero out when not moving
+- Needs follow me position locking
+- Avg speed
+- Timer
+- Speed
+- Current time is not important enough to display top center
 */
+
 import debounce from 'lodash/debounce'
 import { setup } from './canvas'
 import './interaction'
@@ -62,7 +75,7 @@ store.subscribe(() => {
 })
 
 void setup()
-setupLocationTracking('gps')
+setupLocationTracking('demo')
 
 setInterval(() => {
   debouncedRender()

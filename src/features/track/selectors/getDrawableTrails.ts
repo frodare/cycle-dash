@@ -6,9 +6,14 @@ import { TrailEntry } from '..'
 
 const style = (track: TrailEntry): Options => {
   if (track.type === 'savedTrack') {
-    return { stroke: '#f005', strokeWidth: 4, roughness: 2 }
+    return {
+      stroke: '#fffa',
+      strokeWidth: 3,
+      roughness: 2,
+      strokeLineDash: [5, 20]
+    }
   }
-  return { stroke: '#ccc', strokeWidth: 1, roughness: 2 }
+  return { stroke: '#fffc', strokeWidth: 3, roughness: 2 }
 }
 
 const selectDrawableTrails = createSelector(

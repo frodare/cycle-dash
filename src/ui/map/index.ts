@@ -53,11 +53,10 @@ const map = (): void => {
     rc.draw(track)
   }
 
-  renderCurrentLocation()
-
   // renderDrawable(wp1Marker, pointScaler(project([-84.316803, 30.361415])))
   // renderDrawable(homeMarker, pointScaler(project([-84.226565, 30.395234])))
   // renderDrawable(marksTrailHead, pointScaler(project([-84.268047, 30.370262])))
+  renderCurrentLocation()
   renderDrawable(centerMarker, pointScaler(center))
   ctx.restore()
 }

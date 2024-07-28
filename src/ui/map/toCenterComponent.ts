@@ -13,12 +13,12 @@ const toCenterComponent = (): void => {
   const [x2, y2] = pointScaler(center)
 
   rc.line(x1, y1, x2, y2, {
-    stroke: '#f008',
+    stroke: '#f00a',
     strokeWidth: 2,
     roughness: 1,
     dashGap: 0.5,
     dashOffset: 0.5,
-    strokeLineDash: [10, 20]
+    strokeLineDash: [10, 10]
   })
 }
 
