@@ -6,8 +6,11 @@ import { setCenter, setScale } from './features/screen'
 const canvas = document.body // canvas
 
 let panning: Point | null = null
+let pressStart: number | null = null
 const evCache: PointerEvent[] = []
 let prevDiff = -1
+
+let longPressTimer: number | null = null
 
 const removeEvent = (ev: PointerEvent): void => {
   const index = evCache.findIndex(
@@ -25,20 +28,32 @@ const handleWheel = (event: WheelEvent): void => {
 }
 
 const handleStart = (event: PointerEvent): void => {
+  console.log('start', event)
+  longPressTimer = window.setTimeout(() => {
+    longPressTimer = null
+    console.log('long press in timeout!')
+  }, 1000)
+  pressStart = new Date().getTime()
   evCache.push(event)
   panning = [event.clientX, event.clientY]
 }
 
 const handleEnd = (event: PointerEvent): void => {
+  console.log('end', event)
   removeEvent(event)
   if (evCache.length < 2) {
     prevDiff = -1
   }
   panning = null
+  if (pressStart != null && new Date().getTime() - pressStart > 1000) {
+    console.log('long press!')
+  }
 }
 
 const handleCancel = (event: PointerEvent): void => {
   console.log('cancel', event)
+  if (longPressTimer != null) window.clearTimeout(longPressTimer)
+
   removeEvent(event)
   if (evCache.length < 2) {
     prevDiff = -1
@@ -47,6 +62,8 @@ const handleCancel = (event: PointerEvent): void => {
 }
 
 const pointermoveHandler = (ev: PointerEvent): void => {
+  pressStart = null
+  if (longPressTimer != null) window.clearTimeout(longPressTimer)
   const index = evCache.findIndex(
     (cachedEv) => cachedEv.pointerId === ev.pointerId
   )
