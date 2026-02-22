@@ -1,12 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import { createSlice } from '@reduxjs/toolkit'
-import { LngLat } from '../../main'
+import type { LngLat, TrackPoint } from '../../main'
 import { distance } from '@turf/turf'
-
-interface TrackPoint {
-  time: number
-  location: LngLat
-}
 
 interface TrailEntry {
   id: string
@@ -20,17 +15,18 @@ interface TrackState {
   location: TrackPoint | null
   track: TrackPoint[]
   trails: Record<string, TrailEntry>
+  last: TrackPoint | null
 }
 
 const initialState: TrackState = {
   trackId: new Date().toString(),
   track: [],
   location: null,
-  trails: {}
+  trails: {},
+  last: null
 }
 
 const MIN_DISTANCE = 0.02
-let last: TrackPoint | null = null
 
 const trackSlice = createSlice({
   name: 'track',
@@ -39,26 +35,26 @@ const trackSlice = createSlice({
     setTrail: (state, action: PayloadAction<TrailEntry>) => {
       state.trails[action.payload.id] = action.payload
     },
+    resetTrack: (state, action: PayloadAction<TrackPoint>) => {
+      state.track = [action.payload]
+      state.last = action.payload
+      state.trackId = new Date().toString()
+    },
     updateLocation: (state, action: PayloadAction<TrackPoint>) => {
       state.location = action.payload
-      if (state.track.length > 500000) {
-        // TODO: Save track
-        state.track = [action.payload]
-        return
-      }
-      if (last == null) {
-        last = action.payload
+      if (state.last == null) {
+        state.last = action.payload
         state.track.push(action.payload)
         return
       }
-      const distToLast = distance(action.payload.location, last.location, { units: 'kilometers' })
+      const distToLast = distance(action.payload.location, state.last.location, { units: 'kilometers' })
       if (distToLast < MIN_DISTANCE) return
-      last = action.payload
+      state.last = action.payload
       state.track.push(action.payload)
     }
   }
 })
 
 export type { TrackPoint, TrailEntry }
-export const { setTrail, updateLocation } = trackSlice.actions
+export const { setTrail, updateLocation, resetTrack } = trackSlice.actions
 export default trackSlice.reducer

@@ -9,6 +9,8 @@ const selectTelemetry = createSelector(
     const tp2 = track[track.length - 1]
     const tp3 = track[track.length - 2]
 
+    if (tp2 == null) return computeTelemetry(tp1, tp1)
+
     let p1 = tp2
     let p2 = tp3
 

@@ -3,8 +3,12 @@ import { store } from './store'
 import { setSize } from './features/screen'
 
 const scale = window.devicePixelRatio
-const canvas = document.getElementById('app') as HTMLCanvasElement
-const ctx = canvas.getContext('2d') as CanvasRenderingContext2D
+const canvasEl = document.getElementById('app')
+if (!(canvasEl instanceof HTMLCanvasElement)) throw new Error('Canvas element #app not found')
+const canvas: HTMLCanvasElement = canvasEl
+const ctxResult = canvas.getContext('2d')
+if (ctxResult == null) throw new Error('Unable to get 2D rendering context')
+const ctx: CanvasRenderingContext2D = ctxResult
 let rc = rough.canvas(canvas)
 
 const handleSizeUpdate = (): void => {

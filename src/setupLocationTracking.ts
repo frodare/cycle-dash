@@ -42,7 +42,7 @@ const demoLocator = (): void => {
       location: currentLocation
     }))
     demoLocator()
-  }, randNum(1000, 1000))
+  }, randNum(500, 2000))
 }
 
 const setupLocationTracking = (mode: 'gps' | 'demo'): void => {

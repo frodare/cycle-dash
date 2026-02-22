@@ -1,8 +1,9 @@
-import { setTrail } from '.'
+import { resetTrack, setTrail } from '.'
 import { getTrack, getTracks, saveTrack } from '../../db'
 import { store } from '../../store'
 
 const SAVE_INTERVAL = 1000 * 60
+const MAX_TRACK_POINTS = 500000
 
 const loadPreviousTracks = async (): Promise<void> => {
   const savedTracks = await getTracks()
@@ -18,13 +19,29 @@ const loadPreviousTracks = async (): Promise<void> => {
 }
 
 const save = async (): Promise<void> => {
-  const track = store.getState().track.track
-  const id = store.getState().track.trackId
-  await saveTrack(id, track, [0, 0, 0, 0])
+  const { track, trackId } = store.getState().track
+  await saveTrack(trackId, track, [0, 0, 0, 0])
   window.setTimeout(() => {
     void save()
   }, SAVE_INTERVAL)
 }
+
+let isSavingOverflow = false
+
+store.subscribe(() => {
+  const { track, location, trackId } = store.getState().track
+  if (track.length >= MAX_TRACK_POINTS && !isSavingOverflow && location != null) {
+    isSavingOverflow = true
+    saveTrack(trackId, track, [0, 0, 0, 0])
+      .then(() => {
+        store.dispatch(resetTrack(location))
+      })
+      .catch(console.error)
+      .finally(() => {
+        isSavingOverflow = false
+      })
+  }
+})
 
 void save()
 void loadPreviousTracks()

@@ -2,7 +2,7 @@ import { DBSchema, openDB } from 'idb'
 import { TrackPoint } from './main'
 import { BBox } from 'geojson'
 
-const DB_NAME = 'test2'
+const DB_NAME = 'cycle-dash'
 const DB_VERSION = 2
 
 interface CycleDashSchema extends DBSchema {
@@ -19,19 +19,9 @@ interface CycleDashSchema extends DBSchema {
 }
 
 const dbp = openDB<CycleDashSchema>(DB_NAME, DB_VERSION, {
-  upgrade (db, oldVersion, newVersion, transaction, event) {
-    console.log('upgrade', db, oldVersion, newVersion, transaction, event)
+  upgrade (db) {
     const store = db.createObjectStore('tracks', { keyPath: 'id' })
     store.createIndex('by-date', 'date')
-  },
-  blocked (currentVersion, blockedVersion, event) {
-    console.log('blocked', currentVersion, blockedVersion, event)
-  },
-  blocking (currentVersion, blockedVersion, event) {
-    console.log('blocking', currentVersion, blockedVersion, event)
-  },
-  terminated () {
-    console.log('terminated')
   }
 })
 

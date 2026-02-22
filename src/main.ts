@@ -59,14 +59,14 @@ import './style.css'
 import render from './ui'
 import './features/track/persist'
 
+type Point = [number, number]
+
+type LngLat = [number, number]
+
 interface TrackPoint {
   time: number
   location: LngLat
 }
-
-type Point = [number, number]
-
-type LngLat = [number, number]
 
 const debouncedRender = debounce(render, 25, { maxWait: 250 })
 

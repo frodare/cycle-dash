@@ -3,6 +3,10 @@ import { Point } from './main'
 import { store } from './store'
 import { setCenter, setScale } from './features/screen'
 
+const LONG_PRESS_MS = 1000
+const ZOOM_IN_FACTOR = 1.1
+const ZOOM_OUT_FACTOR = 0.9
+
 const canvas = document.body // canvas
 
 let panning: Point | null = null
@@ -21,37 +25,33 @@ const removeEvent = (ev: PointerEvent): void => {
 
 const handleWheel = (event: WheelEvent): void => {
   if (event.deltaY < 0) {
-    debouncedZoom(1.1)
+    debouncedZoom(ZOOM_IN_FACTOR)
   } else {
-    debouncedZoom(0.9)
+    debouncedZoom(ZOOM_OUT_FACTOR)
   }
 }
 
 const handleStart = (event: PointerEvent): void => {
-  console.log('start', event)
   longPressTimer = window.setTimeout(() => {
     longPressTimer = null
-    console.log('long press in timeout!')
-  }, 1000)
+  }, LONG_PRESS_MS)
   pressStart = new Date().getTime()
   evCache.push(event)
   panning = [event.clientX, event.clientY]
 }
 
 const handleEnd = (event: PointerEvent): void => {
-  console.log('end', event)
   removeEvent(event)
   if (evCache.length < 2) {
     prevDiff = -1
   }
   panning = null
-  if (pressStart != null && new Date().getTime() - pressStart > 1000) {
-    console.log('long press!')
+  if (pressStart != null && new Date().getTime() - pressStart > LONG_PRESS_MS) {
+    // long press detected
   }
 }
 
 const handleCancel = (event: PointerEvent): void => {
-  console.log('cancel', event)
   if (longPressTimer != null) window.clearTimeout(longPressTimer)
 
   removeEvent(event)
@@ -74,10 +74,10 @@ const pointermoveHandler = (ev: PointerEvent): void => {
 
     if (prevDiff > 0) {
       if (curDiff > prevDiff) {
-        debouncedZoom(1.1)
+        debouncedZoom(ZOOM_IN_FACTOR)
       }
       if (curDiff < prevDiff) {
-        debouncedZoom(0.9)
+        debouncedZoom(ZOOM_OUT_FACTOR)
       }
     }
 
