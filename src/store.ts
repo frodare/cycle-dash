@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import screenReducer from './features/screen'
 import trackReducer from './features/track'
+import spotifyReducer from './features/spotify'
 
 export const store = configureStore({
   reducer: {
     screen: screenReducer,
-    track: trackReducer
+    track: trackReducer,
+    spotify: spotifyReducer
   }
 })
 

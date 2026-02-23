@@ -58,6 +58,8 @@ import { store } from './store'
 import './style.css'
 import render from './ui'
 import './features/track/persist'
+import './features/spotify/persist'
+import './features/spotify/poll'
 
 type Point = [number, number]
 

@@ -6,6 +6,9 @@ import toCenterComponentTelemetry from './map/toCenterComponentTelemetry'
 import time from './components/time'
 import { createSelector } from '@reduxjs/toolkit'
 import telemetry from './components/telemetry'
+import nowPlaying from './components/nowPlaying'
+import settingsButton from './components/settingsButton'
+import settingsOverlay from './components/settingsOverlay'
 
 type Component = (x: number, y: number, w: number, h: number) => void
 
@@ -49,6 +52,11 @@ const ui = (): void => {
   render(toCenterComponentTelemetry, '0', '-7vh', '100vw', '2vh')
   render(location, '0', '-5vh', '100vw', '5vh')
   map()
+  render(nowPlaying, '2vw', '19vh', '96vw', '8vh')
+  render(settingsButton, '0', '0', '100vw', '10vh')
+  if (store.getState().spotify.settingsOpen) {
+    render(settingsOverlay, '0', '0', '100vw', '100vh')
+  }
   // renderLocation()
   // Time
   // Timer
@@ -60,8 +68,6 @@ const ui = (): void => {
   // Waypoint
 
   // Location
-
-  // Spotify
 
   // FPS monitor
   // console.timeEnd('ui')
